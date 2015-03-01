@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
 
 public class FileOp {
@@ -38,14 +39,20 @@ public class FileOp {
     }
 
     public static boolean createFile(File oFile, boolean createIfDoesNotExist) throws IOException {
-        if (!oFile.getParentFile().exists() && !oFile.getParentFile().mkdirs()) {return false;}
-        if (oFile.exists() && !createIfDoesNotExist) {return oFile.createNewFile();}
-        if (!oFile.exists()) {return oFile.createNewFile();}
+        if (!oFile.getParentFile().exists() && !oFile.getParentFile().mkdirs()) {
+            return false;
+        }
+        if (oFile.exists() && !createIfDoesNotExist) {
+            return oFile.createNewFile();
+        }
+        if (!oFile.exists()) {
+            return oFile.createNewFile();
+        }
         return true;
     }
 
     public static boolean appendToFile(File oFile, String content) throws FileNotFoundException, IOException {
-        FileWriter fileWritter = new FileWriter(oFile.getAbsolutePath(),true);
+        FileWriter fileWritter = new FileWriter(oFile.getAbsolutePath(), true);
         try (BufferedWriter bufferWritter = new BufferedWriter(fileWritter)) {
             bufferWritter.write(content);
             bufferWritter.flush();
@@ -72,10 +79,16 @@ public class FileOp {
         return fileList;
     }
 
-    public static void move(String fromFile, String toFile) throws IOException {
+    public static void move(String fromFile, String toFile, boolean createDestParentDir) throws IOException {
+        File oFromFile = new File(fromFile);
+        File oToFile = new File(toFile);
+        FileUtils.moveFile(oFromFile, oToFile);
+    }
 
-        FileUtils.moveFile(new File(fromFile), new File(toFile));
-
+    public static void copy(String fromFile, String toFile, boolean createDestParentDir) throws IOException {
+        File oFromFile = new File(fromFile);
+        File oToFile = new File(toFile);
+        FileUtils.copyFile(oFromFile, oToFile);
     }
 
     public static void copyFileUsingChannel(File source, File dest) throws IOException {
@@ -85,20 +98,9 @@ public class FileOp {
             sourceChannel = new FileInputStream(source).getChannel();
             destChannel = new FileOutputStream(dest).getChannel();
             destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-        }finally{
+        } finally {
             sourceChannel.close();
             destChannel.close();
         }
     }
-
-    //    public static ArrayList scanAndListOnlyFiles(String dir, int depth) {
-    //
-    //    }
-    //
-    //    public static ArrayList scanAndListOnlyDirs() {
-    //
-    //    }
-    //
-    //    public static ArrayList scanAndList(String dirName, int maxDepth) {
-    //    }
 }
