@@ -13,4 +13,20 @@
     <packaging>jar</packaging>
 
 
+	<!-- addition of this got rid of the Apache resource not found exception -->
+	<!-- i.e., made the project work in eclipse which was working in JetBrains -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
